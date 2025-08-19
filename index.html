@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Where and When - Accessible Aviation POC</title>
+    <link rel="stylesheet" href="styles.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <div class="app-container">
+        <header class="app-header">
+            <h1><i class="fas fa-plane"></i> Where and When</h1>
+            <p>Accessible aviation journey planning</p>
+        </header>
+
+        <nav class="tab-navigation">
+            <button class="tab-button active" onclick="switchTab('international')">
+                <i class="fas fa-globe"></i>
+                International
+            </button>
+            <button class="tab-button" onclick="switchTab('passenger')">
+                <i class="fab fa-whatsapp"></i>
+                Passenger Chat
+            </button>
+            <div class="tab-dropdown-container">
+                <button class="tab-button" onclick="switchTab('airport')">
+                    <i class="fas fa-building"></i>
+                    Airport View
+                    <i class="fas fa-chevron-down dropdown-arrow"></i>
+                </button>
+                <div class="tab-dropdown-menu" id="mainAirportDropdownMenu">
+                    <a href="#" onclick="switchTab('airport', 'meeting')"><i class="fas fa-handshake"></i> Landside Departures</a>
+                    <a href="#" onclick="switchTab('airport', 'airside')"><i class="fas fa-plane-departure"></i> Boarding</a>
+                    <a href="#" onclick="switchTab('airport', 'arrivals')"><i class="fas fa-plane-arrival"></i> Arrivals</a>
+                    <a href="#" onclick="switchTab('airport', 'feedback')"><i class="fas fa-comments"></i> Feedback and Responses</a>
+                    <a href="#" onclick="switchTab('airport', 'insights')"><i class="fas fa-chart-line"></i> Insights</a>
+                </div>
+            </div>
+            <button class="tab-button" onclick="switchTab('airline')">
+                <i class="fas fa-plane-departure"></i>
+                Airline View
+            </button>
+        </nav>
+
+        <main class="tab-content">
+            <!-- International Tab -->
+            <div id="international" class="tab-panel active">
+                <div class="intl-wrap">
+                    <div class="intl-hero">
+                        <h2 id="intlTitle">Accessible travel, made simple</h2>
+                        <p id="intlTagline">Personalised assistance that brings airports and airlines together for you.</p>
+                    </div>
+                    <div class="intl-controls">
+                        <label for="languageSelect" id="intlLangLabel">Language:</label>
+                        <select id="languageSelect" onchange="onLanguageChange(this.value)">
+                            <option value="en-GB">English (UK)</option>
+                            <option value="ar">العربية</option>
+                        </select>
+                    </div>
+                    <div class="intl-grid">
+                        <div class="intl-qr">
+                            <img id="intlQr" alt="QR code" src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICAgIDxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSJ3aGl0ZSIvPgogICAgPCEtLSBDb3JuZXIgc3F1YXJlcyAtLT4KICAgIDxyZWN0IHg9IjAiIHk9IjAiIHdpZHRoPSI3MCIgaGVpZ2h0PSI3MCIgZmlsbD0iYmxhY2siLz4KICAgIDxyZWN0IHg9IjEwIiB5PSIxMCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSJ3aGl0ZSIvPgogICAgPHJlY3QgeD0iMjAiIHk9IjIwIiB3aWR0aD0iMzAiIGhlaWdodD0iMzAiIGZpbGw9ImJsYWNrIi8+CiAgICA8cmVjdCB4PSIxMzAiIHk9IjAiIHdpZHRoPSI3MCIgaGVpZ2h0PSI3MCIgZmlsbD0iYmxhY2siLz4KICAgIDxyZWN0IHg9IjE0MCIgeT0iMTAiIHdpZHRoPSI1MCIgaGVpZ2h0PSI1MCIgZmlsbD0id2hpdGUiLz4KICAgIDxyZWN0IHg9IjE1MCIgeT0iMjAiIHdpZHRoPSIzMCIgaGVpZ2h0PSIzMCIgZmlsbD0iYmxhY2siLz4KICAgIDxyZWN0IHg9IjAiIHk9IjEzMCIgd2lkdGg9IjcwIiBoZWlnaHQ9IjcwIiBmaWxsPSJibGFjayIvPgogICAgPHJlY3QgeD0iMTAiIHk9IjE0MCIgd2lkdGg9IjUwIiBoZWlnaHQ9IjUwIiBmaWxsPSJ3aGl0ZSIvPgogICAgPHJlY3QgeD0iMjAiIHk9IjE1MCIgd2lkdGg9IjMwIiBoZWlnaHQ9IjMwIiBmaWxsPSJibGFjayIvPgogICAgPCEtLSBTYW1wbGUgZGF0YSBwYXR0ZXJuIC0tPgogICAgPHJlY3QgeD0iODAiIHk9IjIwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+CiAgICA8cmVjdCB4PSIxMDAiIHk9IjIwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+CiAgICA8cmVjdCB4PSIxMjAiIHk9IjIwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+CiAgICA8cmVjdCB4PSI4MCIgeT0iNDAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iYmxhY2siLz4KICAgIDxyZWN0IHg9IjEwMCIgeT0iNDAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iYmxhY2siLz4KICAgIDxyZWN0IHg9IjgwIiB5PSI2MCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayIvPgogICAgPHJlY3QgeD0iMTIwIiB5PSI2MCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayIvPgogICAgPHJlY3QgeD0iODAiIHk9IjgwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+CiAgICA8cmVjdCB4PSIxMDAiIHk9IjgwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+CiAgICA8cmVjdCB4PSIxMjAiIHk9IjgwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+CiAgICA8cmVjdCB4PSI4MCIgeT0iMTAwIiB3aWR0aD0iMTAiIGhlaWdodD0iMTAiIGZpbGw9ImJsYWNrIi8+CiAgICA8cmVjdCB4PSIxMDAiIHk9IjEwMCIgd2lkdGg9IjEwIiBoZWlnaHQ9IjEwIiBmaWxsPSJibGFjayIvPgogICAgPHJlY3QgeD0iMTIwIiB5PSIxMDAiIHdpZHRoPSIxMCIgaGVpZ2h0PSIxMCIgZmlsbD0iYmxhY2siLz4KPC9zdmc+"/>
+                            <div class="intl-qr-caption" id="intlQrCaption">Scan to try the demo</div>
+                            <a href="#" onclick="switchTab('passenger')" class="qr-demo-link">Or click here to try the demo</a>
+                        </div>
+                        <div class="intl-points" id="intlPoints">
+                            <div class="point"><i class="fas fa-user-shield"></i><span>Support tailored to your needs</span></div>
+                            <div class="point"><i class="fas fa-route"></i><span>Meet anywhere: desk, parking or lounge</span></div>
+                            <div class="point"><i class="fas fa-handshake"></i><span>Airline + airport, working together</span></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Passenger Chat Tab -->
+            <div id="passenger" class="tab-panel">
+                <div class="chat-container">
+                    <div class="chat-header">
+                        <div class="chat-info">
+                            <div class="avatar">
+                                <i class="fas fa-headset"></i>
+                            </div>
+                            <div>
+                                <h3>Accessible Aviation Assistant</h3>
+                                <span class="status">Online</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="journey-stage-selector">
+                        <div class="journey-table">
+                            <!-- Stage Numbers Header -->
+                            <div class="stage-numbers-header">
+                                <div class="route-label">Route</div>
+                                <div class="stage-number-cell">1</div>
+                                <div class="stage-number-cell">2</div>
+                                <div class="stage-number-cell">3</div>
+                                <div class="stage-number-cell">4</div>
+                                <div class="stage-number-cell">5</div>
+                                <div class="stage-number-cell">6</div>
+                                <div class="stage-number-cell">7</div>
+                            </div>
+                            
+                            <!-- Direct Route Row -->
+                            <div class="route-row direct-row">
+                                <div class="route-header">
+                                    <div class="route-title">📱 Direct Route</div>
+                                    <div class="route-subtitle">Passenger initiates</div>
+                                </div>
+                                <div class="stage-cell">
+                                    <label class="stage-option">
+                                        <input type="radio" name="journeyStage" value="welcome_message" onchange="updateJourneyStage(this.value)">
+                                        <span class="stage-label">👋 Welcome Message</span>
+                                    </label>
+                                </div>
+                                <div class="stage-cell merged" rowspan="2">
+                                    <label class="stage-option">
+                                        <input type="radio" name="journeyStage" value="on_the_day" onchange="updateJourneyStage(this.value)">
+                                        <span class="stage-label">📅 On the Day</span>
+                                    </label>
+                                </div>
+
+                                <div class="stage-cell merged">
+                                    <label class="stage-option">
+                                        <input type="radio" name="journeyStage" value="departure_airport" onchange="updateJourneyStage(this.value)">
+                                        <span class="stage-label">🏢 Meeting Point</span>
+                                    </label>
+                                </div>
+                                <div class="stage-cell merged">
+                                    <label class="stage-option">
+                                        <input type="radio" name="journeyStage" value="pre_flight" onchange="updateJourneyStage(this.value)">
+                                        <span class="stage-label">🚪 Boarding</span>
+                                    </label>
+                                </div>
+                                <div class="stage-cell merged">
+                                    <label class="stage-option">
+                                        <input type="radio" name="journeyStage" value="on_flight" onchange="updateJourneyStage(this.value)">
+                                        <span class="stage-label">✈️ On Flight</span>
+                                    </label>
+                                </div>
+                                <div class="stage-cell merged">
+                                    <label class="stage-option">
+                                        <input type="radio" name="journeyStage" value="arrival_airport" onchange="updateJourneyStage(this.value)">
+                                        <span class="stage-label">🛬 Arrival Airport</span>
+                                    </label>
+                                </div>
+                                <div class="stage-cell merged">
+                                    <label class="stage-option">
+                                        <input type="radio" name="journeyStage" value="after_journey" onchange="updateJourneyStage(this.value)">
+                                        <span class="stage-label">🏁 After Journey</span>
+                                    </label>
+                                </div>
+                            </div>
+                            
+                            <!-- Airline Route Row -->
+                            <div class="route-row airline-row">
+                                <div class="route-header">
+                                    <div class="route-title">✈️ Airline Route</div>
+                                    <div class="route-subtitle">Via airline/aggregator</div>
+                                </div>
+                                <div class="stage-cell">
+                                    <label class="stage-option">
+                                        <input type="radio" name="journeyStage" value="entry_via_airline" checked onchange="updateJourneyStage(this.value)">
+                                        <span class="stage-label">📋 Entry via Airline</span>
+                                    </label>
+                                </div>
+                                <!-- Merged cells are handled by the direct row above -->
+                                <div class="stage-cell merged-hidden"></div>
+                                <div class="stage-cell merged-hidden"></div>
+                                <div class="stage-cell merged-hidden"></div>
+                                <div class="stage-cell merged-hidden"></div>
+                                <div class="stage-cell merged-hidden"></div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="chat-messages" id="chatMessages">
+                        <!-- Messages will be added dynamically based on journey stage -->
+                    </div>
+                    
+                    <div class="chat-input-container">
+                        <div class="chat-input-wrapper">
+                            <button class="attachment-btn" onclick="showAttachmentOptions()">
+                                <i class="fas fa-paperclip"></i>
+                            </button>
+                            <input type="text" id="messageInput" placeholder="Type a message..." onkeypress="handleKeyPress(event)">
+                            <button class="voice-btn" onclick="toggleVoiceInput()">
+                                <i class="fas fa-microphone"></i>
+                            </button>
+                            <button class="send-btn" onclick="sendMessage()">
+                                <i class="fas fa-paper-plane"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Airport View Tab -->
+            <div id="airport" class="tab-panel">
+                <div class="dashboard-container">
+                    <div class="dashboard-header">
+                        <h2><i class="fas fa-building"></i> Dubai International Airport (DXB)</h2>
+                        <div class="dashboard-stats">
+                            <div class="stat-card">
+                                <div class="stat-number" id="statActivePassengers">0</div>
+                                <div class="stat-label">Active Passengers</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="statConfirmed">0</div>
+                                <div class="stat-label">Confirmed Arrivals</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="statAvgRating">4.2</div>
+                                <div class="stat-label">Avg Rating</div>
+                            </div>
+                        </div>
+                    </div>
+
+
+
+                    <div class="dashboard-content">
+                        <!-- Meeting View -->
+                        <div id="meetingView" class="panel" style="display:none">
+                            <h3><i class="fas fa-handshake"></i> Landside Departures</h3>
+                            <div class="table-list">
+                                <div class="table-header">
+                                    <div>Passenger</div>
+                                    <div>Flight</div>
+                                    <div>Meeting Point</div>
+                                    <div>Needs</div>
+                                    <div>Status</div>
+                                    <div>Actions</div>
+                                </div>
+                                <div id="meetingList" class="table-body"></div>
+                            </div>
+                        </div>
+
+                        <!-- Airside View -->
+                        <div id="airsideView" class="panel" style="display:none">
+                            <h3><i class="fas fa-plane-departure"></i> Boarding</h3>
+                            <div id="airsideNotifications" class="notice-area"></div>
+                            <div class="table-list">
+                                <div class="table-header">
+                                    <div>Passenger</div>
+                                    <div>Waiting At</div>
+                                    <div>Gate</div>
+                                    <div>Meet Time</div>
+                                    <div>Walk Time</div>
+                                    <div>Actions</div>
+                                </div>
+                                <div id="airsideList" class="table-body"></div>
+                            </div>
+                            <div class="terminal-map-placeholder">
+                                <div class="map-box">Terminal map placeholder</div>
+                            </div>
+                        </div>
+
+                        <!-- Management View -->
+                        <div id="managementView" class="panel">
+                            <h3><i class="fas fa-chart-pie"></i> Management Dashboard</h3>
+                            <div class="cards-grid" id="mgmtKpis"></div>
+                            <div class="grid-2">
+                                <div class="panel-inner">
+                                    <h4>Assistance Mix</h4>
+                                    <div id="assistMix" class="bar-list"></div>
+                                </div>
+                                <div class="panel-inner">
+                                    <h4>Today’s Flow (per hour)</h4>
+                                    <div id="hourlyFlow" class="bar-list"></div>
+                                </div>
+                            </div>
+                            <div class="grid-2">
+                                <div class="panel-inner">
+                                    <h4>On-time to Meet (SLA)</h4>
+                                    <div id="slaGauge" class="gauge-box"></div>
+                                </div>
+                                <div class="panel-inner">
+                                    <h4>Top Risk Flags</h4>
+                                    <ul id="riskFlags" class="risk-list"></ul>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Reviews & Responses -->
+                        <div id="feedbackView" class="panel" style="display:none">
+                            <h3><i class="fas fa-comments"></i> Feedback and Responses</h3>
+                            <div class="table-list">
+                                <div class="table-header">
+                                    <div>Passenger</div>
+                                    <div>Flight</div>
+                                    <div>Ratings</div>
+                                    <div>Comment</div>
+                                    <div>Status</div>
+                                    <div>Respond</div>
+                                </div>
+                                <div id="feedbackList" class="table-body"></div>
+                            </div>
+                        </div>
+
+                        <!-- Arrivals View -->
+                        <div id="arrivalsView" class="panel" style="display:none">
+                            <h3><i class="fas fa-plane-arrival"></i> Arrivals</h3>
+                            <div class="table-list">
+                                <div class="table-header">
+                                    <div>Passenger</div>
+                                    <div>Flight</div>
+                                    <div>Origin</div>
+                                    <div>Status</div>
+                                    <div>Gate</div>
+                                    <div>Actions</div>
+                                </div>
+                                <div id="arrivalsList" class="table-body"></div>
+                            </div>
+                        </div>
+
+                        <!-- Insights View -->
+                        <div id="insightsView" class="panel" style="display:none">
+                            <h3><i class="fas fa-chart-line"></i> Insights</h3>
+                            <div class="cards-grid" id="insightsKpis"></div>
+                            <div class="grid-2">
+                                <div class="panel-inner">
+                                    <h4>Daily Trends</h4>
+                                    <div id="dailyTrends" class="bar-list"></div>
+                                </div>
+                                <div class="panel-inner">
+                                    <h4>Service Performance</h4>
+                                    <div id="servicePerformance" class="bar-list"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Airline View Tab -->
+            <div id="airline" class="tab-panel">
+                <div class="dashboard-container">
+                    <div class="dashboard-header">
+                        <h2><i class="fas fa-plane-departure"></i> Emirates - Operations Dashboard</h2>
+                        <div class="dashboard-stats">
+                            <div class="stat-card">
+                                <div class="stat-number" id="alStatPax">0</div>
+                                <div class="stat-label">Passengers Today</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="alStatBoarded">0</div>
+                                <div class="stat-label">Boarded</div>
+                            </div>
+                            <div class="stat-card">
+                                <div class="stat-number" id="alStatRating">4.3</div>
+                                <div class="stat-label">Avg Rating</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="airport-subnav">
+                        <button class="subnav-button active" onclick="switchAirlineView('boarding')"><i class="fas fa-person-walking"></i> Boarding</button>
+                        <button class="subnav-button" onclick="switchAirlineView('cabin')"><i class="fas fa-id-badge"></i> Cabin Crew</button>
+                        <button class="subnav-button" onclick="switchAirlineView('management')"><i class="fas fa-chart-pie"></i> Management</button>
+                        <button class="subnav-button" onclick="switchAirlineView('feedback')"><i class="fas fa-comments"></i> Reviews & Responses</button>
+                    </div>
+
+                    <div class="dashboard-content">
+                        <!-- Boarding View -->
+                        <div id="airlineBoardingView" class="panel">
+                            <h3><i class="fas fa-person-walking"></i> Boarding Status</h3>
+                            <div class="table-list">
+                                <div class="table-header">
+                                    <div>Passenger</div>
+                                    <div>Flight</div>
+                                    <div>Status</div>
+                                    <div>Location</div>
+                                    <div>Gate</div>
+                                    <div>Actions</div>
+                                </div>
+                                <div id="airlineBoardingList" class="table-body"></div>
+                            </div>
+                        </div>
+
+                        <!-- Cabin Crew View -->
+                        <div id="airlineCabinView" class="panel" style="display:none">
+                            <h3><i class="fas fa-id-badge"></i> Cabin Crew Brief</h3>
+                            <div id="cabinBrief" class="passenger-profiles"></div>
+                        </div>
+
+                        <!-- Airline Management View -->
+                        <div id="airlineMgmtView" class="panel" style="display:none">
+                            <h3><i class="fas fa-chart-pie"></i> Management Dashboard</h3>
+                            <div class="cards-grid" id="alMgmtKpis"></div>
+                            <div class="grid-2">
+                                <div class="panel-inner">
+                                    <h4>Assistance Mix</h4>
+                                    <div id="alAssistMix" class="bar-list"></div>
+                                </div>
+                                <div class="panel-inner">
+                                    <h4>Route Ratings</h4>
+                                    <div id="alRouteRatings" class="bar-list"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Airline Feedback View -->
+                        <div id="airlineFeedbackView" class="panel" style="display:none">
+                            <h3><i class="fas fa-comments"></i> Customer Feedback</h3>
+                            <div class="table-list">
+                                <div class="table-header">
+                                    <div>Passenger</div>
+                                    <div>Flight</div>
+                                    <div>Ratings</div>
+                                    <div>Comment</div>
+                                    <div>Status</div>
+                                    <div>Respond</div>
+                                </div>
+                                <div id="alFeedbackList" class="table-body"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
