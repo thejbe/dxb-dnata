@@ -778,6 +778,10 @@ function updateJourneyStage(stage) {
         startWelcomeFlow();
     } else if (stage === 'on_the_day') {
         startOnTheDayFlow();
+    } else if (stage === 'pre_flight') {
+        // Clear messages and start boarding sequence
+        clearMessages();
+        startBoardingSequence();
     }
 }
 
