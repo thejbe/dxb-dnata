@@ -566,6 +566,80 @@ function handleUserMessage(message) {
             addMessage("I understand your travel plans have changed. Let me connect you with our coordination team who can help make any necessary adjustments. They'll be in touch shortly.<br><br>Thank you for letting us know! 💙");
             conversationState.journeyStage = 'on_day_completed';
         }, 1000);
+    } else if (conversationState.journeyStage === 'on_day_completed' && (msg.includes("i've arrived") || msg.includes('arrived') || msg.includes('i am here') || msg.includes("i'm here"))) {
+        // Handle passenger arrival and coordinator dispatch
+        setTimeout(() => {
+            addMessage("Great! Saeed will be there in about 10 minutes and will bring someone to take your bags.");
+            conversationState.journeyStage = 'coordinator_dispatched';
+        }, 1000);
+    } else if (conversationState.journeyStage === 'coordinator_dispatched') {
+        // Show coordinator details after dispatch
+        setTimeout(() => {
+            const coordinatorHtml = `
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                    <div style="font-weight: bold; margin-bottom: 10px;">📸 Here's what Saeed looks like:</div>
+                    <div style="text-align: center; margin-bottom: 15px;">
+                        <img src="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMjAwIiBoZWlnaHQ9IjIwMCIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KICA8ZGVmcz4KICAgIDxsaW5lYXJHcmFkaWVudCBpZD0ic2tpbiIgeDE9IjAlIiB5MT0iMCUiIHgyPSIwJSIgeTI9IjEwMCUiPgogICAgICA8c3RvcCBvZmZzZXQ9IjAlIiBzdG9wLWNvbG9yPSIjZGJiNGE0Ii8+CiAgICAgIDxzdG9wIG9mZnNldD0iMTAwJSIgc3RvcC1jb2xvcj0iI2NhOWM4YyIvPgogICAgPC9saW5lYXJHcmFkaWVudD4KICA8L2RlZnM+CiAgCiAgPCEtLSBCYWNrZ3JvdW5kIC0tPgogIDxyZWN0IHdpZHRoPSIyMDAiIGhlaWdodD0iMjAwIiBmaWxsPSIjZjBmMGYwIi8+CiAgCiAgPCEtLSBTaG91bGRlcnMgYW5kIG5lY2sgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjE4MCIgcng9IjYwIiByeT0iMzAiIGZpbGw9IiNjNzI5MjkiLz4KICA8cmVjdCB4PSI3MCIgeT0iMTUwIiB3aWR0aD0iNjAiIGhlaWdodD0iNDAiIGZpbGw9InVybCgjc2tpbikiLz4KICAKICA8IS0tIEZhY2UgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjEwMCIgcng9IjQ1IiByeT0iNTUiIGZpbGw9InVybCgjc2tpbikiLz4KICA8IS0tIEJlYXJkIC0tPgogIDxwYXRoIGQ9Ik03MCA5MiBRNzAgMTEwIDEwMCAxMjAgUTEzMCAxMTAgMTMwIDkyIEwxMzAgMTQwIFE5MCAxNjAgMTAwIDE2MiBRMTEwIDE2MCA3MCAxNDAiIGZpbGw9IiMyYjJiMmIiLz4KICA8IS0tIEV5ZXMgLS0+CiAgPGVsbGlwc2UgY3g9Ijg1IiBjeT0iODUiIHJ4PSI4IiByeT0iMTIiIGZpbGw9IndoaXRlIi8+CiAgPGVsbGlwc2UgY3g9IjExNSIgY3k9Ijg1IiByeD0iOCIgcnk9IjEyIiBmaWxsPSJ3aGl0ZSIvPgogIDxjaXJjbGUgY3g9Ijg1IiBjeT0iODgiIHI9IjQiIGZpbGw9IiMzMzMiLz4KICA8Y2lyY2xlIGN4PSIxMTUiIGN5PSI4OCIgcj0iNCIgZmlsbD0iIzMzMyIvPgogIDwhLS0gTm9zZSAtLT4KICA8ZWxsaXBzZSBjeD0iMTAwIiBjeT0iMTAwIiByeD0iNSIgcnk9IjgiIGZpbGw9IiNiYTk1ODUiLz4KICA8IS0tIE1vdXRoIC0tPgogIDxwYXRoIGQ9Ik05MiAxMTUgUTEwMCAxMjIgMTA4IDExNSIgc3Ryb2tlPSIjNjY2IiBzdHJva2Utd2lkdGg9IjIiIGZpbGw9Im5vbmUiLz4KICA8IS0tIEhhaXIgLS0+CiAgPGVsbGlwc2UgY3g9IjEwMCIgY3k9IjY1IiByeD0iNDgiIHJ5PSIzNSIgZmlsbD0iIzJiMmIyYiIvPgogIDxlbGxpcHNlIGN4PSIxMDAiIGN5PSI0NSIgcng9IjM1IiByeT0iMjUiIGZpbGw9IiMyYjJiMmIiLz4KPC9zdmc+" 
+                             alt="Saeed - Accessibility Coordinator" 
+                             style="width: 120px; height: 120px; border-radius: 10px; border: 3px solid #c72929;">
+                    </div>
+                    <div style="color: #333;">
+                        <div style="font-weight: bold; color: #c72929; margin-bottom: 8px;">👔 Saeed will be wearing:</div>
+                        <ul style="margin: 0; padding-left: 20px; line-height: 1.6;">
+                            <li>Emirates high-vis vest</li>
+                            <li>White polo shirt</li>
+                            <li>Emirates name badge</li>
+                            <li>Navy blue trousers</li>
+                        </ul>
+                        <div style="margin-top: 10px; font-style: italic; color: #666;">
+                            He'll be looking for you and will introduce himself when he approaches.
+                        </div>
+                    </div>
+                </div>
+            `;
+            addMessage(coordinatorHtml);
+            conversationState.journeyStage = 'coordinator_details_shown';
+        }, 2000);
+    } else if (conversationState.journeyStage === 'coordinator_details_shown') {
+        // Ask for location details to help coordinator find passenger
+        setTimeout(() => {
+            addMessage("Could you share your location or parking space number to help Saeed find you quickly?");
+            conversationState.journeyStage = 'location_sharing';
+        }, 1500);
+    } else if (conversationState.journeyStage === 'location_sharing') {
+        // Confirm location shared and coordinator dispatched
+        setTimeout(() => {
+            addMessage(`Perfect! I've got your details and shared them with Saeed.`);
+        }, 1000);
+        setTimeout(() => {
+            addMessage("Saeed is on his way to you now! 🚶‍♂️");
+        }, 2000);
+        setTimeout(() => {
+            addMessage("For now you'll be messaging with Saeed directly. If you need emergency help, type 'help' and we'll notify a supervisor at Dubai International Airport.");
+            conversationState.journeyStage = 'direct_messaging_info';
+        }, 3500);
+    } else if (conversationState.journeyStage === 'direct_messaging_info') {
+        // Ask about luggage assistance
+        setTimeout(() => {
+            addMessage("Quick question - do you need Saeed to bring someone to help with your luggage? Don't worry, they'll take it straight out of your car for you.");
+            conversationState.journeyStage = 'luggage_assistance';
+        }, 1500);
+    } else if (conversationState.journeyStage === 'luggage_assistance') {
+        // Handle luggage assistance response and complete handoff
+        if (msg.includes('yes') || msg.includes('help') || msg.includes('need')) {
+            setTimeout(() => {
+                addMessage("Perfect! Saeed will bring a colleague to help with your luggage. They'll handle everything from your car.");
+            }, 1000);
+        } else {
+            setTimeout(() => {
+                addMessage("No problem! Saeed will assist you personally with everything you need.");
+            }, 1000);
+        }
+        
+        setTimeout(() => {
+            addMessage("📱 <strong>Important:</strong> From now on, you'll be talking to Saeed directly via this number. He'll take great care of you through the rest of your journey.<br><br>🆘 <span style='color: #dc3545;'><strong>If at any time you need emergency assistance, just type 'help' and a supervisor will be immediately alerted.</strong></span><br><br>Saeed should be with you any moment now! 😊");
+            conversationState.journeyStage = 'coordinator_handoff_complete';
+        }, 2500);
     }
 }
 
