@@ -544,6 +544,10 @@ function handleUserMessage(message) {
                 addMessage(`Perfect! Please try to arrive 3 hours before departure (so by 15:30 for your 18:30 flight).<br><br>${locationDetails}`);
                 conversationState.journeyStage = 'on_day_completed';
             }, 1000);
+            
+            setTimeout(() => {
+                addMessage(`Once you arrive and park, please say "I've arrived" and someone will come to meet you.`);
+            }, 2500);
         } else if (msg.includes('no') || msg.includes('change') || msg.includes('different')) {
             setTimeout(() => {
                 addMessage("No problem! Where would you like to be met instead? I can arrange meeting at:<br><br>1. Short Stay Parking<br>2. Long Stay Parking<br>3. Drop Off Zone<br>4. Car Rental Return<br>5. Metro Station<br><br>Just let me know the number or tell me what works better for you.");
