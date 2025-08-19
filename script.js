@@ -665,6 +665,21 @@ function handleUserMessage(message) {
                 addMessage("I've alerted the team immediately. Someone will contact you right away! 🚨");
             }, 1000);
         }
+    } else if (conversationState.journeyStage === 'on_flight_sequence' || conversationState.journeyStage === 'on_flight_complete') {
+        // Handle messages during on-flight sequence
+        if (msg.includes('help') || msg.includes('assistance') || msg.includes('crew')) {
+            setTimeout(() => {
+                addMessage("Please speak directly to the Emirates cabin crew - they have all your details and are fully briefed to assist you! 👨‍✈️👩‍✈️");
+            }, 1000);
+        } else if (msg.includes('feedback') || msg.includes('experience') || msg.includes('review')) {
+            setTimeout(() => {
+                addMessage("Thank you! We'll definitely reach out after your arrival at LHR to hear about your experience. Your feedback is invaluable! 📝✨");
+            }, 1000);
+        } else if (msg.includes('arrival') || msg.includes('lhr') || msg.includes('london')) {
+            setTimeout(() => {
+                addMessage("We don't have direct contact with LHR during your flight, but we'll coordinate any arrival assistance you need once you land! 🛬🇬🇧");
+            }, 1000);
+        }
     }
     
     // Fallback handler for arrival messages in unexpected stages
@@ -782,6 +797,10 @@ function updateJourneyStage(stage) {
         // Clear messages and start boarding sequence
         clearMessages();
         startBoardingSequence();
+    } else if (stage === 'on_flight') {
+        // Clear messages and start on-flight sequence
+        clearMessages();
+        startOnFlightSequence();
     }
 }
 
@@ -924,6 +943,41 @@ function startBoardingSequence() {
         addMessage(`⏰ <strong>Reminder:</strong> Saeed will come to meet you in 15 minutes at the Emirates Assistance Desk (17:45). Please settle your bill and be ready. If you need help, type "help".`);
         conversationState.journeyStage = 'boarding_reminder_sent';
     }, 13000);
+}
+
+// Function to start the on-flight sequence (localized for Emirates/DXB)
+function startOnFlightSequence() {
+    conversationState.journeyStage = 'on_flight_sequence';
+    
+    // Message 1: Welcome aboard message
+    setTimeout(() => {
+        addMessage("✈️ Welcome aboard Emirates EK15! You've successfully boarded with your assistance. The cabin crew has been briefed about your wheelchair assistance needs.");
+    }, 1000);
+    
+    // Message 2: What cabin crew knows
+    setTimeout(() => {
+        const crewBriefHtml = `
+            <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 10px 0;">
+                <div style="font-weight: bold; margin-bottom: 10px;">Here's what the cabin crew know about you:</div>
+                <ul style="margin: 5px 0; padding-left: 20px; line-height: 1.8;">
+                    <li><strong>Passenger:</strong> Jim Beattie</li>
+                    <li><strong>Accessibility needs:</strong> wheelchair assistance</li>
+                    <li><strong>Meeting assistance:</strong> Arranged at Emirates Assistance Desk</li>
+                    <li><strong>Special requirements:</strong> All noted in your profile</li>
+                </ul>
+                <div style="margin-top: 10px; color: #555;">
+                    If you have any questions or need assistance during the flight, please ask the cabin crew directly - they're fully briefed and ready to help!
+                </div>
+            </div>
+        `;
+        addMessage(crewBriefHtml);
+    }, 3000);
+    
+    // Message 3: Airport limitation and feedback
+    setTimeout(() => {
+        addMessage("Just so you know - we don't work directly with LHR airport, so we won't be able to pass messages to them during your flight.<br><br>But don't worry! We'll be in touch after you arrive to hear about your experience. Your feedback helps us improve our service and we share it (anonymously) with airports and airlines to make travel better for everyone! ✈️");
+        conversationState.journeyStage = 'on_flight_complete';
+    }, 5500);
 }
 
 function switchAirportView(view) {
