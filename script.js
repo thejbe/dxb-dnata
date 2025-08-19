@@ -607,14 +607,13 @@ function handleUserMessage(message) {
                 </div>
             `;
             addMessage(coordinatorHtml);
-            conversationState.journeyStage = 'coordinator_details_shown';
         }, 2000);
-    } else if (conversationState.journeyStage === 'coordinator_details_shown') {
-        // Ask for location details to help coordinator find passenger
+        
+        // Ask for location details immediately after coordinator profile
         setTimeout(() => {
             addMessage("Could you share your location or parking space number to help Saeed find you quickly?");
             conversationState.journeyStage = 'location_sharing';
-        }, 1500);
+        }, 3500);
     } else if (conversationState.journeyStage === 'location_sharing') {
         // Confirm location shared and coordinator dispatched
         setTimeout(() => {
@@ -624,40 +623,18 @@ function handleUserMessage(message) {
             addMessage("Saeed is on his way to you now! 🚶‍♂️");
         }, 2000);
         setTimeout(() => {
-            addMessage("For now you'll be messaging with Saeed directly. If you need emergency help, type 'help' and we'll notify a supervisor at Dubai International Airport.");
-            conversationState.journeyStage = 'direct_messaging_info';
+            addMessage("For now you'll be messaging with Saeed directly. If you need emergency help, type 'help' and we'll notify a supervisor at DXB.");
         }, 3500);
-    } else if (conversationState.journeyStage === 'direct_messaging_info') {
-        // Ask about luggage assistance
         setTimeout(() => {
-            addMessage("Quick question - do you need Saeed to bring someone to help with your luggage? Don't worry, they'll take it straight out of your car for you.");
-            conversationState.journeyStage = 'luggage_assistance';
-        }, 1500);
-    } else if (conversationState.journeyStage === 'luggage_assistance') {
-        // Handle luggage assistance response and complete handoff
-        if (msg.includes('yes') || msg.includes('help') || msg.includes('need')) {
-            setTimeout(() => {
-                addMessage("Perfect! Saeed will bring a colleague to help with your luggage. They'll handle everything from your car.");
-            }, 1000);
-        } else {
-            setTimeout(() => {
-                addMessage("No problem! Saeed will assist you personally with everything you need.");
-            }, 1000);
-        }
-        
-        setTimeout(() => {
-            addMessage("📱 <strong>Important:</strong> From now on, you'll be talking to Saeed directly via this number. He'll take great care of you through the rest of your journey.<br><br>🆘 <span style='color: #dc3545;'><strong>If at any time you need emergency assistance, just type 'help' and a supervisor will be immediately alerted.</strong></span><br><br>Saeed should be with you any moment now! 😊");
+            addMessage("🔄 <strong>Important:</strong> From now on, you'll be talking to Saeed directly via this number. He'll take great care of you through the rest of your journey.");
             conversationState.journeyStage = 'coordinator_handoff_complete';
-        }, 2500);
+        }, 5000);
     }
     
     // Fallback handler for arrival messages in unexpected stages
     if ((msg.includes("i've arrived") || msg.includes('arrived') || msg.includes('i am here') || msg.includes("i'm here") || msg.includes('here now')) && 
         conversationState.journeyStage !== 'coordinator_dispatched' && 
-        conversationState.journeyStage !== 'coordinator_details_shown' && 
         conversationState.journeyStage !== 'location_sharing' &&
-        conversationState.journeyStage !== 'direct_messaging_info' &&
-        conversationState.journeyStage !== 'luggage_assistance' &&
         conversationState.journeyStage !== 'coordinator_handoff_complete' &&
         conversationState.journeyStage !== 'departure_airport' &&
         conversationState.journeyStage !== 'on_day_completed' &&
