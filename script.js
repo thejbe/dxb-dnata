@@ -503,7 +503,8 @@ function handleUserMessage(message) {
         // Handle on-the-day flight confirmation
         if (msg.includes('yes') || msg.includes('still') || msg.includes('confirm')) {
             setTimeout(() => {
-                addMessage("Great! Do you still want to be met at the disabled parking area as planned?");
+                const meetingPoint = conversationState.selectedMeetingPoint || 'your selected meeting location';
+                addMessage(`Great! Do you still want to be met at <strong>${meetingPoint.toLowerCase()}</strong> as planned?`);
                 conversationState.journeyStage = 'on_day_meeting_confirmation';
             }, 1000);
         } else if (msg.includes('no') || msg.includes('cancel') || msg.includes('change')) {
@@ -520,7 +521,27 @@ function handleUserMessage(message) {
         // Handle meeting point confirmation
         if (msg.includes('yes') || msg.includes('still') || msg.includes('same')) {
             setTimeout(() => {
-                addMessage("Perfect! Please try to arrive 3 hours before departure (so by 15:30 for your 18:30 flight).<br><br>🅿️ <strong>Here's the disabled parking location:</strong><br><br>📍 DXB Terminal 3 - Disabled/Accessibility Parking Area<br><br>🗺️ Map link: https://maps.google.com/maps?q=25.2529,-55.3658<br><br>This will take you directly to the disabled parking spaces.");
+                const meetingPoint = conversationState.selectedMeetingPoint || 'your selected meeting location';
+                let locationDetails = '';
+                
+                // Provide specific details based on meeting point
+                if (meetingPoint.toLowerCase().includes('disabled') || meetingPoint.toLowerCase().includes('accessibility')) {
+                    locationDetails = `🅿️ <strong>Here's the disabled parking location:</strong><br><br>📍 DXB Terminal 3 - Disabled/Accessibility Parking Area<br><br>🗺️ Map link: https://maps.google.com/maps?q=25.2529,-55.3658<br><br>This will take you directly to the disabled parking spaces.`;
+                } else if (meetingPoint.toLowerCase().includes('short stay')) {
+                    locationDetails = `🚗 <strong>Here's the short stay parking location:</strong><br><br>📍 DXB Terminal 3 - Short Stay Car Park (Levels 1-4)<br><br>🗺️ Map link: https://maps.google.com/maps?q=25.2530,-55.3660<br><br>Our coordinator will meet you at the entrance.`;
+                } else if (meetingPoint.toLowerCase().includes('long stay')) {
+                    locationDetails = `🚙 <strong>Here's the long stay parking location:</strong><br><br>📍 DXB Long Stay Car Park with shuttle pickup<br><br>🗺️ Map link: https://maps.google.com/maps?q=25.2525,-55.3665<br><br>Take the shuttle to Terminal 3 where our coordinator will meet you.`;
+                } else if (meetingPoint.toLowerCase().includes('drop off')) {
+                    locationDetails = `🚕 <strong>Here's the drop off location:</strong><br><br>📍 DXB Terminal 3 - Departures Level Curbside<br><br>🗺️ Map link: https://maps.google.com/maps?q=25.2531,-55.3657<br><br>Our coordinator will meet you at the assistance desk near the entrance.`;
+                } else if (meetingPoint.toLowerCase().includes('metro')) {
+                    locationDetails = `🚇 <strong>Here's the metro station location:</strong><br><br>📍 DXB Airport Metro Station - Terminal 3 entrance<br><br>🗺️ Map link: https://maps.google.com/maps?q=25.2532,-55.3655<br><br>Exit the metro and our coordinator will meet you at the terminal entrance.`;
+                } else if (meetingPoint.toLowerCase().includes('car rental')) {
+                    locationDetails = `🔑 <strong>Here's the car rental return location:</strong><br><br>📍 ${meetingPoint}<br><br>🗺️ Map link: https://maps.google.com/maps?q=25.2528,-55.3662<br><br>Our coordinator will meet you at the return desk.`;
+                } else {
+                    locationDetails = `📍 <strong>Here's your meeting location:</strong><br><br>📍 ${meetingPoint}<br><br>Our coordinator will meet you there as arranged.`;
+                }
+                
+                addMessage(`Perfect! Please try to arrive 3 hours before departure (so by 15:30 for your 18:30 flight).<br><br>${locationDetails}`);
                 conversationState.journeyStage = 'on_day_completed';
             }, 1000);
         } else if (msg.includes('no') || msg.includes('change') || msg.includes('different')) {
