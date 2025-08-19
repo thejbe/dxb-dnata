@@ -614,6 +614,9 @@ function switchTab(tabName, airportView = null) {
     // Handle passenger chat tab
     if (tabName === 'passenger') {
         setTimeout(() => {
+            // Clear chat history when reloading passenger chat
+            clearMessages();
+            
             // Auto-select welcome message radio
             const welcomeRadio = document.querySelector('input[value="welcome_message"]');
             if (welcomeRadio) {
@@ -659,7 +662,6 @@ function updateJourneyStage(stage) {
     if (stage === 'welcome_message') {
         startWelcomeFlow();
     } else if (stage === 'on_the_day') {
-        clearMessages();
         startOnTheDayFlow();
     }
 }
