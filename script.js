@@ -63,6 +63,16 @@ function startWelcomeFlow() {
     });
 }
 
+// Start on the day flow
+function startOnTheDayFlow() {
+    console.log('Starting on-the-day flow');
+    
+    setTimeout(() => {
+        addMessage("☀️ Good morning Jim! It's your travel day. Are you still planning to fly to LHR on flight Emirates EK15 departing at 18:30 today?");
+        conversationState.journeyStage = 'on_day_flight_confirmation';
+    }, 1000);
+}
+
 // Handle user input
 function handleUserMessage(message) {
     console.log('User said:', message);
@@ -489,6 +499,52 @@ function handleUserMessage(message) {
                 // Stay in final_confirmation stage to allow updates
             }, 1000);
         }
+    } else if (conversationState.journeyStage === 'on_day_flight_confirmation') {
+        // Handle on-the-day flight confirmation
+        if (msg.includes('yes') || msg.includes('still') || msg.includes('confirm')) {
+            setTimeout(() => {
+                addMessage("Great! Do you still want to be met at the disabled parking area as planned?");
+                conversationState.journeyStage = 'on_day_meeting_confirmation';
+            }, 1000);
+        } else if (msg.includes('no') || msg.includes('cancel') || msg.includes('change')) {
+            setTimeout(() => {
+                addMessage("No problem! Let me know what's changed and I can help you update your travel arrangements.");
+                conversationState.journeyStage = 'on_day_changes';
+            }, 1000);
+        } else {
+            setTimeout(() => {
+                addMessage("Please confirm if you're still planning to fly today by saying 'yes' or 'no'. 😊");
+            }, 1000);
+        }
+    } else if (conversationState.journeyStage === 'on_day_meeting_confirmation') {
+        // Handle meeting point confirmation
+        if (msg.includes('yes') || msg.includes('still') || msg.includes('same')) {
+            setTimeout(() => {
+                addMessage("Perfect! Please try to arrive 3 hours before departure (so by 15:30 for your 18:30 flight).<br><br>🅿️ <strong>Here's the disabled parking location:</strong><br><br>📍 DXB Terminal 3 - Disabled/Accessibility Parking Area<br><br>🗺️ Map link: https://maps.google.com/maps?q=25.2529,-55.3658<br><br>This will take you directly to the disabled parking spaces.");
+                conversationState.journeyStage = 'on_day_completed';
+            }, 1000);
+        } else if (msg.includes('no') || msg.includes('change') || msg.includes('different')) {
+            setTimeout(() => {
+                addMessage("No problem! Where would you like to be met instead? I can arrange meeting at:<br><br>1. Short Stay Parking<br>2. Long Stay Parking<br>3. Drop Off Zone<br>4. Car Rental Return<br>5. Metro Station<br><br>Just let me know the number or tell me what works better for you.");
+                conversationState.journeyStage = 'on_day_new_meeting_point';
+            }, 1000);
+        } else {
+            setTimeout(() => {
+                addMessage("Please confirm if you still want to be met at the disabled parking area by saying 'yes' or 'no'. 😊");
+            }, 1000);
+        }
+    } else if (conversationState.journeyStage === 'on_day_new_meeting_point') {
+        // Handle new meeting point selection
+        setTimeout(() => {
+            addMessage(`Got it! I've updated your meeting point. Our assistance coordinator will meet you at your new location. Please arrive by 15:30 for your 18:30 flight.<br><br>I'll send you the exact location details shortly. Have a wonderful trip! ✈️`);
+            conversationState.journeyStage = 'on_day_completed';
+        }, 1000);
+    } else if (conversationState.journeyStage === 'on_day_changes') {
+        // Handle flight changes
+        setTimeout(() => {
+            addMessage("I understand your travel plans have changed. Let me connect you with our coordination team who can help make any necessary adjustments. They'll be in touch shortly.<br><br>Thank you for letting us know! 💙");
+            conversationState.journeyStage = 'on_day_completed';
+        }, 1000);
     }
 }
 
@@ -581,6 +637,9 @@ function updateJourneyStage(stage) {
     
     if (stage === 'welcome_message') {
         startWelcomeFlow();
+    } else if (stage === 'on_the_day') {
+        clearMessages();
+        startOnTheDayFlow();
     }
 }
 
