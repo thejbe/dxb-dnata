@@ -566,8 +566,12 @@ function handleUserMessage(message) {
             addMessage("I understand your travel plans have changed. Let me connect you with our coordination team who can help make any necessary adjustments. They'll be in touch shortly.<br><br>Thank you for letting us know! 💙");
             conversationState.journeyStage = 'on_day_completed';
         }, 1000);
-    } else if (conversationState.journeyStage === 'on_day_completed' && (msg.includes("i've arrived") || msg.includes('arrived') || msg.includes('i am here') || msg.includes("i'm here"))) {
+    } else if ((conversationState.journeyStage === 'on_day_completed' || 
+                conversationState.journeyStage === 'on_day_meeting_confirmation' ||
+                conversationState.journeyStage === 'on_day_new_meeting_point') && 
+               (msg.includes("i've arrived") || msg.includes('arrived') || msg.includes('i am here') || msg.includes("i'm here") || msg.includes('here now'))) {
         // Handle passenger arrival and coordinator dispatch
+        console.log('Arrival detected! Current stage:', conversationState.journeyStage);
         setTimeout(() => {
             addMessage("Great! Saeed will be there in about 10 minutes and will bring someone to take your bags.");
             conversationState.journeyStage = 'coordinator_dispatched';
@@ -640,6 +644,21 @@ function handleUserMessage(message) {
             addMessage("📱 <strong>Important:</strong> From now on, you'll be talking to Saeed directly via this number. He'll take great care of you through the rest of your journey.<br><br>🆘 <span style='color: #dc3545;'><strong>If at any time you need emergency assistance, just type 'help' and a supervisor will be immediately alerted.</strong></span><br><br>Saeed should be with you any moment now! 😊");
             conversationState.journeyStage = 'coordinator_handoff_complete';
         }, 2500);
+    }
+    
+    // Fallback handler for arrival messages in unexpected stages
+    if ((msg.includes("i've arrived") || msg.includes('arrived') || msg.includes('i am here') || msg.includes("i'm here") || msg.includes('here now')) && 
+        conversationState.journeyStage !== 'coordinator_dispatched' && 
+        conversationState.journeyStage !== 'coordinator_details_shown' && 
+        conversationState.journeyStage !== 'location_sharing' &&
+        conversationState.journeyStage !== 'direct_messaging_info' &&
+        conversationState.journeyStage !== 'luggage_assistance' &&
+        conversationState.journeyStage !== 'coordinator_handoff_complete') {
+        
+        console.log('Arrival message detected in unexpected stage:', conversationState.journeyStage);
+        setTimeout(() => {
+            addMessage(`I see you've arrived! Let me connect you with our coordination team. Current status: ${conversationState.journeyStage}. Please try switching to the "On the Day" option if you haven't already, or let me know if you need help with anything specific.`);
+        }, 1000);
     }
 }
 
