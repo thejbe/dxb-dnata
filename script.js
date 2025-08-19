@@ -572,7 +572,8 @@ function handleUserMessage(message) {
         }, 1000);
     } else if ((conversationState.journeyStage === 'on_day_completed' || 
                 conversationState.journeyStage === 'on_day_meeting_confirmation' ||
-                conversationState.journeyStage === 'on_day_new_meeting_point') && 
+                conversationState.journeyStage === 'on_day_new_meeting_point' ||
+                conversationState.journeyStage === 'departure_airport') && 
                (msg.includes("i've arrived") || msg.includes('arrived') || msg.includes('i am here') || msg.includes("i'm here") || msg.includes('here now'))) {
         // Handle passenger arrival and coordinator dispatch
         console.log('Arrival detected! Current stage:', conversationState.journeyStage);
@@ -657,7 +658,11 @@ function handleUserMessage(message) {
         conversationState.journeyStage !== 'location_sharing' &&
         conversationState.journeyStage !== 'direct_messaging_info' &&
         conversationState.journeyStage !== 'luggage_assistance' &&
-        conversationState.journeyStage !== 'coordinator_handoff_complete') {
+        conversationState.journeyStage !== 'coordinator_handoff_complete' &&
+        conversationState.journeyStage !== 'departure_airport' &&
+        conversationState.journeyStage !== 'on_day_completed' &&
+        conversationState.journeyStage !== 'on_day_meeting_confirmation' &&
+        conversationState.journeyStage !== 'on_day_new_meeting_point') {
         
         console.log('Arrival message detected in unexpected stage:', conversationState.journeyStage);
         setTimeout(() => {
