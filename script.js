@@ -579,10 +579,9 @@ function handleUserMessage(message) {
         console.log('Arrival detected! Current stage:', conversationState.journeyStage);
         setTimeout(() => {
             addMessage("Great! Saeed will be there in about 10 minutes and will bring someone to take your bags.");
-            conversationState.journeyStage = 'coordinator_dispatched';
         }, 1000);
-    } else if (conversationState.journeyStage === 'coordinator_dispatched') {
-        // Show coordinator details after dispatch
+        
+        // Show coordinator details automatically after dispatch
         setTimeout(() => {
             const coordinatorHtml = `
                 <div style="background: #f8f9fa; padding: 15px; border-radius: 10px; margin: 10px 0;">
