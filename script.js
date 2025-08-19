@@ -628,6 +628,43 @@ function handleUserMessage(message) {
             addMessage("🔄 <strong>Important:</strong> From now on, you'll be talking to Saeed directly via this number. He'll take great care of you through the rest of your journey.");
             conversationState.journeyStage = 'coordinator_handoff_complete';
         }, 5000);
+        
+        // Auto-trigger boarding sequence after handoff (demo timing)
+        setTimeout(() => {
+            startBoardingSequence();
+        }, 7000);
+    } else if (conversationState.journeyStage === 'coordinator_handoff_complete') {
+        // Handle user messages during coordinator handoff complete stage
+        if (msg.includes('boarding') || msg.includes('gate') || msg.includes('time') || msg.includes('ready')) {
+            startBoardingSequence();
+        }
+    } else if (conversationState.journeyStage === 'boarding_sequence' || conversationState.journeyStage === 'boarding_time_approaching') {
+        // Handle messages during boarding sequence
+        if (msg.includes('help')) {
+            setTimeout(() => {
+                addMessage("I've notified the team! Someone will be in touch shortly to assist you. 👥");
+            }, 1000);
+        } else if (msg.includes('ready') || msg.includes('go') || msg.includes('now')) {
+            setTimeout(() => {
+                addMessage("Perfect! Saeed should be at the Emirates Assistance Desk now. Head over when you're ready! 🚶‍♀️✈️");
+            }, 1000);
+        } else if (msg.includes('time') || msg.includes('when')) {
+            setTimeout(() => {
+                addMessage("Your meet time with Saeed is 17:45 at the Emirates Assistance Desk. About 12 minutes walk to the gate from there. 🕐");
+            }, 1000);
+        }
+    } else if (conversationState.journeyStage === 'boarding_reminder_sent') {
+        // Handle messages after boarding reminder
+        if (msg.includes('ready') || msg.includes('coming') || msg.includes('on my way')) {
+            setTimeout(() => {
+                addMessage("Excellent! Saeed will be waiting for you at the Emirates Assistance Desk. Have a wonderful flight to London! ✈️🇬🇧");
+                conversationState.journeyStage = 'journey_complete';
+            }, 1500);
+        } else if (msg.includes('help')) {
+            setTimeout(() => {
+                addMessage("I've alerted the team immediately. Someone will contact you right away! 🚨");
+            }, 1000);
+        }
     }
     
     // Fallback handler for arrival messages in unexpected stages
@@ -836,6 +873,53 @@ function generateEmiratesTicket() {
             </div>
         </div>
     `;
+}
+
+// Function to start the boarding sequence (localized for DXB/Saeed)
+function startBoardingSequence() {
+    conversationState.journeyStage = 'boarding_sequence';
+    
+    // Message 1: Check-in confirmation
+    setTimeout(() => {
+        addMessage("Thanks! I've got you checked in at your chosen waiting spot. ✈️ Enjoy your time before boarding!");
+    }, 1000);
+    
+    // Message 2: Support options
+    setTimeout(() => {
+        addMessage(`If you need help while you're waiting, you can:<br><strong>1. Type "help" here and I'll notify the team</strong><br><strong>2. Ask the venue staff to call the Emirates Assistance Desk</strong><br><strong>3. Share your location and I'll arrange someone to meet you</strong>`);
+    }, 3000);
+    
+    // Message 3: Pre-boarding brief
+    setTimeout(() => {
+        const briefHtml = `
+            <div style="background: #f0f8ff; padding: 15px; border-radius: 10px; margin: 10px 0; border-left: 4px solid #c72929;">
+                <div style="font-weight: bold; color: #c72929; margin-bottom: 10px;">Pre-boarding brief:</div>
+                <ul style="margin: 5px 0; padding-left: 20px; line-height: 1.8;">
+                    <li><strong>Meet time:</strong> 17:45</li>
+                    <li><strong>Walk time to gate:</strong> 12 minutes</li>
+                    <li><strong>If anything changes,</strong> just message "help" and I'll update the team</li>
+                </ul>
+            </div>
+        `;
+        addMessage(briefHtml);
+    }, 5000);
+    
+    // Message 4: Enjoy time message
+    setTimeout(() => {
+        addMessage("I'll be here if you need me — enjoy your time and I'll prompt you when it's time to go.");
+    }, 7000);
+    
+    // Message 5: Time passing simulation
+    setTimeout(() => {
+        addMessage(`<span style="color: #888; font-style: italic;">(time passes...)</span>`);
+        conversationState.journeyStage = 'boarding_time_approaching';
+    }, 10000);
+    
+    // Message 6: Boarding reminder (Saeed localized)
+    setTimeout(() => {
+        addMessage(`⏰ <strong>Reminder:</strong> Saeed will come to meet you in 15 minutes at the Emirates Assistance Desk (17:45). Please settle your bill and be ready. If you need help, type "help".`);
+        conversationState.journeyStage = 'boarding_reminder_sent';
+    }, 13000);
 }
 
 function switchAirportView(view) {
