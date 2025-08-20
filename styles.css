@@ -172,6 +172,35 @@ body {
 .intl-points .point { display:flex; align-items:center; gap:0.6rem; background:#ffffff; border:1px solid #e2e8f0; border-radius:10px; padding:0.75rem; color:#334155; }
 .rtl { direction: rtl; }
 
+/* Language switching improvements */
+.intl-container[style*="direction: rtl"] .intl-controls {
+    justify-content: flex-start;
+}
+
+.intl-container[style*="direction: rtl"] .intl-points .point {
+    text-align: right;
+    flex-direction: row-reverse;
+}
+
+.intl-container[style*="direction: rtl"] .qr-demo-link {
+    text-align: center;
+}
+
+/* Arabic font improvements */
+.intl-container[style*="direction: rtl"] {
+    font-family: 'Segoe UI', 'Tahoma', 'Arial', sans-serif;
+    line-height: 1.6;
+}
+
+#languageSelect {
+    padding: 0.5rem;
+    border: 1px solid #d1d5db;
+    border-radius: 6px;
+    background: white;
+    font-size: 0.9rem;
+    min-width: 140px;
+}
+
 /* Chat Styles */
 .chat-container {
     height: 100%;

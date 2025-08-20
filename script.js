@@ -680,6 +680,18 @@ function handleUserMessage(message) {
                 addMessage("We don't have direct contact with LHR during your flight, but we'll coordinate any arrival assistance you need once you land! 🛬🇬🇧");
             }, 1000);
         }
+    } else if (conversationState.journeyStage === 'arabic_welcome_message') {
+        // Handle Arabic welcome responses (Arabic only)
+        if (msg.includes('نعم') || msg.includes('ابدأ')) {
+            conversationState.journeyStage = 'choose_method';
+            setTimeout(() => {
+                addMessage(`ممتاز! يمكنك مشاركة تفاصيل رحلتك بإحدى الطريقتين:<br><br><strong>1. اكتب التفاصيل يدوياً</strong><br>أخبرنا عن رحلتك ومتطلباتك<br><br><strong>2. التقط صورة أو ارفع تذكرتك/بطاقة الصعود</strong><br>سنستخرج التفاصيل من التذكرة تلقائياً<br><br>اختر الرقم 1 أو 2:`);
+            }, 1000);
+        } else if (msg.includes('لا') || msg.includes('لاحقا')) {
+            setTimeout(() => {
+                addMessage("لا مشكلة! نحن هنا عندما تكون جاهزاً. فقط قل 'ابدأ' عندما تريد البدء! 😊");
+            }, 1000);
+        }
     }
     
     // Fallback handler for arrival messages in unexpected stages
@@ -801,12 +813,126 @@ function updateJourneyStage(stage) {
         // Clear messages and start on-flight sequence
         clearMessages();
         startOnFlightSequence();
+    } else if (stage === 'arabic_welcome') {
+        // Clear messages and start Arabic welcome flow
+        clearMessages();
+        startArabicWelcomeFlow();
     }
 }
 
 // Placeholder functions for existing functionality
 function onLanguageChange(language) {
     console.log('Language changed to:', language);
+    
+    // Define translations
+    const translations = {
+        'en-GB': {
+            title: 'Accessible travel, made simple',
+            tagline: 'Personalised assistance that brings airports and airlines together for you.',
+            langLabel: 'Language:',
+            qrCaption: 'Scan to try the demo',
+            demoLink: 'Or click here to try the demo',
+            points: [
+                'Support tailored to your needs',
+                'Meet anywhere: desk, parking or lounge', 
+                'Airline + airport, working together'
+            ]
+        },
+        'ar': {
+            title: 'السفر المُيسَّر، مُبسَّط',
+            tagline: 'مساعدة شخصية تجمع المطارات وشركات الطيران من أجلك.',
+            langLabel: 'اللغة:',
+            qrCaption: 'امسح للتجربة التوضيحية',
+            demoLink: 'أو اضغط هنا للتجربة التوضيحية',
+            points: [
+                'دعم مصمم حسب احتياجاتك',
+                'اللقاء في أي مكان: مكتب، موقف سيارات أو صالة',
+                'شركة الطيران + المطار، يعملان معاً'
+            ]
+        }
+    };
+    
+    const texts = translations[language];
+    if (!texts) return;
+    
+    // Update text content
+    const titleElement = document.getElementById('intlTitle');
+    const taglineElement = document.getElementById('intlTagline');
+    const langLabelElement = document.getElementById('intlLangLabel');
+    const qrCaptionElement = document.getElementById('intlQrCaption');
+    const demoLinkElement = document.querySelector('.qr-demo-link');
+    const pointElements = document.querySelectorAll('#intlPoints .point span');
+    
+    if (titleElement) titleElement.textContent = texts.title;
+    if (taglineElement) taglineElement.textContent = texts.tagline;
+    if (langLabelElement) langLabelElement.textContent = texts.langLabel;
+    if (qrCaptionElement) qrCaptionElement.textContent = texts.qrCaption;
+    if (demoLinkElement) demoLinkElement.textContent = texts.demoLink;
+    
+    // Update point descriptions
+    pointElements.forEach((span, index) => {
+        if (texts.points[index]) {
+            span.textContent = texts.points[index];
+        }
+    });
+    
+    // Update page direction for Arabic
+    const intlContainer = document.querySelector('.intl-container');
+    if (intlContainer) {
+        if (language === 'ar') {
+            intlContainer.style.direction = 'rtl';
+            intlContainer.style.textAlign = 'right';
+        } else {
+            intlContainer.style.direction = 'ltr';
+            intlContainer.style.textAlign = 'left';
+        }
+    }
+}
+
+// Function to start the Arabic welcome flow (mirroring English welcome)
+function startArabicWelcomeFlow() {
+    conversationState.journeyStage = 'arabic_welcome_message';
+    
+    // Message 1: Arabic welcome to DXB
+    setTimeout(() => {
+        addMessage("👋 مرحباً بك في خدمة الكونسيرج بمطار دبي الدولي! نحن هنا لتقديم الدعم الشخصي لاحتياجات إمكانية الوصول في رحلتك عبر مطار دبي. ✈️");
+    }, 500);
+    
+    // Message 2: How we help (Arabic)
+    setTimeout(() => {
+        addMessage("سنلتقي بك في المكان الذي تختاره ونساعدك عبر المطار وصولاً إلى رحلتك. سنتأكد من حصولك على المساعدة المطلوبة بالضبط طوال رحلتك. 🤝🌟");
+    }, 2000);
+    
+    // Message 3: Ready to start (Arabic)
+    setTimeout(() => {
+        addMessage("هل تود البدء؟ فقط قل 'نعم' أو 'ابدأ' وسنبدأ! 🚀");
+    }, 3500);
+}
+
+// Function to switch to language-appropriate demo
+function switchToLanguageAppropriateDemo() {
+    const languageSelect = document.getElementById('languageSelect');
+    const selectedLanguage = languageSelect ? languageSelect.value : 'en-GB';
+    
+    // Switch to passenger chat tab
+    switchTab('passenger');
+    
+    // Select appropriate welcome tab based on language
+    if (selectedLanguage === 'ar') {
+        // Select Arabic welcome radio button and trigger Arabic flow
+        const arabicRadio = document.querySelector('input[value="arabic_welcome"]');
+        if (arabicRadio) {
+            arabicRadio.checked = true;
+            updateJourneyStage('arabic_welcome');
+        }
+    } else {
+        // Select English welcome radio button and trigger English flow  
+        const englishRadio = document.querySelector('input[value="welcome_message"]');
+        if (englishRadio) {
+            englishRadio.checked = true;
+            updateJourneyStage('welcome_message');
+        }
+    }
 }
 
 function toggleVoiceInput() {

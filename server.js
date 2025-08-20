@@ -352,16 +352,12 @@ function generateAIResponse(message, conversationId) {
     }
   }
   
-  if (conversation.journeyStage === 'entry_via_airline') {
-    if (!conversation.hasProfile) {
-      return `Hello! Welcome to Accessible Aviation assistance. I can see you've been referred by your airline. 
-
-To get started, could you please tell me:
-1. Your name
-2. Your flight details
-3. Any accessibility needs you have
-
-This will help me provide the best possible support for your journey.`;
+  if (conversation.journeyStage === 'arabic_welcome') {
+    if (msg.includes('نعم') || msg.includes('ابدأ')) {
+      return "ممتاز! يمكنك مشاركة تفاصيل رحلتك بإحدى الطريقتين: 1. اكتب التفاصيل يدوياً أو 2. التقط صورة أو ارفع تذكرتك. اختر 1 أو 2.";
+    }
+    if (msg.includes('لا') || msg.includes('لاحقا')) {
+      return "لا مشكلة! نحن هنا عندما تكون جاهزاً. فقط قل 'ابدأ' عندما تريد البدء! 😊";
     }
   }
   
