@@ -628,15 +628,16 @@ function handleUserMessage(message) {
             addMessage("🔄 <strong>Important:</strong> From now on, you'll be talking to Saeed directly via this number. He'll take great care of you through the rest of your journey.");
             conversationState.journeyStage = 'coordinator_handoff_complete';
         }, 5000);
-        
-        // Auto-trigger boarding sequence after handoff (demo timing)
-        setTimeout(() => {
-            startBoardingSequence();
-        }, 7000);
     } else if (conversationState.journeyStage === 'coordinator_handoff_complete') {
         // Handle user messages during coordinator handoff complete stage
-        if (msg.includes('boarding') || msg.includes('gate') || msg.includes('time') || msg.includes('ready')) {
-            startBoardingSequence();
+        if (msg.includes('help')) {
+            setTimeout(() => {
+                addMessage("I've notified Saeed! He'll be in touch shortly to assist you. 👥");
+            }, 1000);
+        } else if (msg.includes('boarding') || msg.includes('gate') || msg.includes('time') || msg.includes('ready')) {
+            setTimeout(() => {
+                addMessage("Please click the '🚪 Boarding' radio button above to access the boarding sequence when you're ready to proceed to your gate! ✈️");
+            }, 1000);
         }
     } else if (conversationState.journeyStage === 'boarding_sequence' || conversationState.journeyStage === 'boarding_time_approaching') {
         // Handle messages during boarding sequence
